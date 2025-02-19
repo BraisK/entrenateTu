@@ -1,44 +1,65 @@
-import {   PrismaClient, Train,  } from "@prisma/client";
-import { HttpException } from "../exceptions/httpException"
-import bcrypt, { compare } from "bcrypt"
-import jwt from "jsonwebtoken"
-
-// Alta cohexion y bajo acoplamiento
-
-// Usar un patron singleton
-
-const prisma = new PrismaClient()
-const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || 'pass'
+import { prisma } from "../database/database";
+import { HttpException } from "../exceptions/httpException";
+import { Train } from "@prisma/client";
 
 export class TrainService {
+
     static async getById(id: number) {
         const findTrain = await prisma.train.findUnique({ where: { id } })
-        if (!findTrain) throw new HttpException(404, 'User not found')
+        if (!findTrain) throw new HttpException(404, 'Train not found')
         return findTrain
     }
 
-    static async getAll() {
-        const trains = await prisma.train.findMany()
-        return trains
+    // localhost:3000/api/Train/?title=dam
+    static async getAll(title: string = '') {
+        return await prisma.train.findMany({
+            where: {
+                ...(title && {
+                    title: {
+                        contains: title,
+                        //mode: "insensitive" // Búsqueda sin distinción entre mayúsculas y minúsculas
+                    }
+                })
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            take: 100
+        });
     }
-    static async save(train: Train) {
+
+    static async create(idUser: number, train: Train) {
+        console.log('creando', idUser)
         return await prisma.train.create({
             data: {
-                ...train
+                ...train,
+                userId: idUser
             }
         })
     }
+
+    static async update(id: number, train: Train) {
+        const findtrain = await prisma.train.findUnique({ where: { id } })
+        if (!findtrain) throw new HttpException(404, 'Train doesnt exists')
+        return await prisma.train.update({
+            where: { id },
+            data: {
+                ...train,
+            }
+        })
+    }
+
     static async delete(id: number) {
-        return await prisma.train.delete( {
-            where: {id}
+        try {
+            return await prisma.train.delete({ where: { id } });
+        } catch (error) {
+            throw new HttpException(404, "Train not found");
         }
-        )
     }
-    static async update(id:number, change:Train ) {
-        return await prisma.train.update( {
-            where:{id},
-            data:change
-        }
-        )
-    }
+
+
+
+
+
+
 }

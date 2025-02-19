@@ -5,8 +5,7 @@ export const ErrorMiddleware = (error:HttpException, req:Request, res:Response, 
     try {
         const status = error.status || 500
         const message = error.message || 'Somthing want wrong'
-        res.status(status).json({message})
-        
+        res.status(status).json({message})        
     } catch (error) {
         next(error)
     }

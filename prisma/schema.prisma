@@ -5,39 +5,43 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
-  id                Int      @id @default(autoincrement())
-  name              String
-  surname           String?
-  email             String   @unique
-  password          String
-  role              String? // admin, vip, null
-  active            Boolean  @default(true)
-  acepNotifications Boolean  @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  Trainings Train[] 
+  id        Int   @id   @default(autoincrement())
+  name      String
+  surname   String?
+  email     String  @unique
+  password  String
+  role      String? // admin  vip   null
+  active    Boolean   @default(true)
+  accepNotifications Boolean @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt  
+  
+  train    Train[]
 }
 
 model Train {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int   @id   @default(autoincrement())
+  title         String
+  description   String?
+  active        Boolean   @default(true)
+  published     DateTime @default(now()) // iso8601
+  expired       DateTime  // iso8601
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt   
+
+
+  idUserCreator Int
+  userCreator   User  @relation(fields: [idUserCreator], references: [id])
+
 }
-
-
