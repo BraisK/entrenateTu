@@ -5,6 +5,7 @@ import { createClient } from '@libsql/client'
 export const libsql = createClient({
     url: `${process.env.TURSO_DATABASE_URL}`,
     authToken: `${process.env.TURSO_AUTH_TOKEN}`,
+    //syncUrl: 'file:./dev.db'
 })
 
 export const adapter = new PrismaLibSQL(libsql)
