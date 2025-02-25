@@ -1,5 +1,8 @@
 import { AuthService } from "../services/auth.service";
 import e, { Response, Request, NextFunction } from 'express'
+import jwt from "jsonwebtoken";
+
+const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || 'pass'
 
 export class AuthController {
     static async register(req: Request, res: Response, next: NextFunction) {
@@ -43,5 +46,15 @@ export class AuthController {
         }
 
     }
+    static async getAuthenticatedUser (req: Request, res: Response, next: NextFunction){
+        try {
+            const token = req.cookies.token;
+            if (!token)  res.status(401).json({ message: "No autenticado" });
+            const decoded = jwt.verify(token, TOKEN_PASSWORD);
+            res.status(200).json(decoded)
+        } catch (error) {
+            next(error)
+        }
+    };
 
 }

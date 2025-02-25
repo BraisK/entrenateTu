@@ -1,6 +1,7 @@
 import express, {Response, Request} from 'express'
 import authRouter from './routes/auth.routes'
 import userRouter from './routes/user.routes'
+import trainsRouter from './routes/train.routes'
 
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
@@ -38,6 +39,7 @@ const limiter = rateLimit({
 app.use(limiter)
 
 app.use('/api/auth',authRouter)
+app.use('/api/trains',trainsRouter)
 app.use('/api/users',userRouter)
 
 app.get('/', (req:Request, res:Response)=>{

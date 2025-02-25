@@ -28,12 +28,12 @@ export class TrainService {
         });
     }
 
-    static async create(idUser: number, train: Train) {
-        console.log('creando', idUser)
+    static async create(userId: number, train: Train) {
+        console.log('creando', userId)
         return await prisma.train.create({
             data: {
                 ...train,
-                userId: idUser
+                idUserCreator: userId
             }
         })
     }
