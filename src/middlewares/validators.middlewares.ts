@@ -17,6 +17,12 @@ export const trainValidation = [
     body('description').optional().isLength({max:2000})
 ]
 
+export const suggestionValidation = [
+    body('title')
+        .isLength({min:4,max:40}).withMessage('Titulo mas de 4 caracteres'),
+    body('description').optional().isLength({max:2000})
+]
+
 export const categoryValidation = [
     body('name').notEmpty().withMessage('Name required')
 ]

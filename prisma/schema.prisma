@@ -27,9 +27,26 @@ model User {
   updatedAt   DateTime  @updatedAt  
   
   train    Train[]
+  suggestion Suggestion[]
 }
 
 model Train {
+  id            Int   @id   @default(autoincrement())
+  title         String
+  description   String?
+  active        Boolean   @default(true)
+  published     DateTime @default(now()) // iso8601
+  expired       DateTime  // iso8601
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt   
+
+
+  idUserCreator Int
+  userCreator   User  @relation(fields: [idUserCreator], references: [id])
+
+}
+model Suggestion {
   id            Int   @id   @default(autoincrement())
   title         String
   description   String?
