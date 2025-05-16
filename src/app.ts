@@ -4,7 +4,6 @@ import userRouter from './routes/user.routes'
 import trainsRouter from './routes/train.routes'
 import suggestionsRouter from './routes/suggestion.routes'
 
-
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import compression from 'compression'

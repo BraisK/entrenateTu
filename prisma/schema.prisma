@@ -29,7 +29,6 @@ model User {
   train    Train[]
   rates   Rate[]
   suggestions Suggestion[]
-
 }
 
 model Train {
@@ -46,10 +45,8 @@ model Train {
 
   idUserCreator Int
   userCreator   User  @relation(fields: [idUserCreator], references: [id])
-
   rates   Rate[]
 }
-
 model Suggestion {
   id            Int   @id   @default(autoincrement())
   title         String
@@ -64,8 +61,8 @@ model Suggestion {
 
   idUserCreator Int
   userCreator   User  @relation(fields: [idUserCreator], references: [id])
-
 }
+
 model Rate{
   idUser  Int
   idTrain Int

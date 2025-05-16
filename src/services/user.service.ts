@@ -19,6 +19,7 @@ export class UserService {
         const users = await prisma.user.findMany({
             omit: { password: true }
         })
-        return users
+        const filterUsers = users.filter( user => user.active)
+        return filterUsers
     }
 }
