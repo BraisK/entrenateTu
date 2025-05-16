@@ -27,6 +27,9 @@ model User {
   updatedAt   DateTime  @updatedAt  
   
   train    Train[]
+  rates   Rate[]
+  suggestions Suggestion[]
+
 }
 
 model Train {
@@ -44,4 +47,35 @@ model Train {
   idUserCreator Int
   userCreator   User  @relation(fields: [idUserCreator], references: [id])
 
+  rates   Rate[]
+}
+
+model Suggestion {
+  id            Int   @id   @default(autoincrement())
+  title         String
+  description   String?
+  active        Boolean   @default(true)
+  published     DateTime @default(now()) // iso8601
+  expired       DateTime  // iso8601
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt   
+
+
+  idUserCreator Int
+  userCreator   User  @relation(fields: [idUserCreator], references: [id])
+
+}
+model Rate{
+  idUser  Int
+  idTrain Int
+  value   Int  
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt   
+
+  user  User  @relation(fields: [idUser], references: [id])
+  train  Train  @relation(fields: [idTrain], references: [id])
+
+  @@id([idUser, idTrain])
 }
