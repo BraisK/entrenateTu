@@ -14,7 +14,7 @@ router.get('/', isAuthenticate, TrainController.getAll)
 //localhost:3000/api/offers/xxxx
 router.get('/:id', isAuthenticate, TrainController.getById)
 //POST añadir una oferta nueva localhost:3000/api/offers/  {body}
-router.post('/', isAuthenticate, isAdmin, trainValidation, ValidationMiddleware, TrainController.create)
+router.post('/', isAuthenticate, trainValidation, ValidationMiddleware, TrainController.create)
 //DELETE Borrar una oferta localhost:3000/api/offers/XXXX  
 router.delete('/:id',isAuthenticate,isAdmin, TrainController.delete)
 //PUT modificar una oferta localhost:3000/api/offers/XXXX  {body}

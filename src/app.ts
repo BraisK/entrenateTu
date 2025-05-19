@@ -23,7 +23,7 @@ app.use(cookieParser())
 //todo limitar cors
 //cambiar la url cuando deploy
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://entrenate-tu-front.vercel.app'],
+    origin: ['http://localhost:5173', 'http://localhost:4173', 'https://entrenate-tu-front.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
