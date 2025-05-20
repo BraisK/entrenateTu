@@ -15,11 +15,20 @@ export class UserService {
         if (!findUser) throw new HttpException(404, 'User not found')
         return findUser
     }
-    static async getAll() {
-        const users = await prisma.user.findMany({
-            omit: { password: true }
-        })
-        const filterUsers = users.filter( user => user.active)
-        return filterUsers
+    static async getAll(email: string = '') {
+        return await prisma.user.findMany({
+            where: {
+                ...(email && {
+                    email: {
+                        contains: email,
+                        //mode: "insensitive" // Búsqueda sin distinción entre mayúsculas y minúsculas
+                    }
+                })
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            take: 100
+        });
     }
 }

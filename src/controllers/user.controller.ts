@@ -17,7 +17,9 @@ export class UserController {
 
     static async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await UserService.getAll()
+            //localhost:3000/train?title=XXXXXX
+            const { email } = req.query;
+            const user = await UserService.getAll(email as string)
             res.status(200).json(user)
         } catch (error) {
             next(error)
