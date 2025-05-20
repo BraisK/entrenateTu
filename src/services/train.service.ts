@@ -49,13 +49,17 @@ export class TrainService {
     })
   }
 
-  static async delete(id: number) {
-    try {
-      return await prisma.train.delete({ where: { id } });
-    } catch (error) {
-      throw new HttpException(404, "Train not found");
-    }
+static async delete(id: number) {
+  try {
+    // Borra primero los rates asociados
+    await prisma.rate.deleteMany({ where: { idTrain: id } });
+    // Ahora borra el train
+    return await prisma.train.delete({ where: { id } });
+  } catch (error) {
+    console.error(error);
+    throw new HttpException(404, "Train not found");
   }
+}
   static async rate(
     idUser: number,
     idTrain: number,
