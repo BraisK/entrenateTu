@@ -24,7 +24,7 @@ export class AuthService {
             data: {
                 ...user,
                 password: passwordEncrypted,
-                role: null,
+                role: 'user',
                 //a:'aa'
             },
             omit: {

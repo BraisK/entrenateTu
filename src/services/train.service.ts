@@ -21,6 +21,9 @@ export class TrainService {
           }
         })
       },
+      include: {
+        userCreator: true, // <-- Esto incluye los datos del usuario creador
+      },
       orderBy: {
         createdAt: 'desc'
       },
