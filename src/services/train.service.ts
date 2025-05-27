@@ -11,13 +11,33 @@ export class TrainService {
   }
 
   // localhost:3000/api/Train/?title=dam
-  static async getAll(title: string = '') {
+  static async getAll(idUserCreator?: number, title: string = '') {
     return await prisma.train.findMany({
       where: {
+        ...(idUserCreator && { idUserCreator }), // Solo filtra si se pasa el id
         ...(title && {
           title: {
             contains: title,
-            //mode: "insensitive" // Búsqueda sin distinción entre mayúsculas y minúsculas
+          }
+        })
+      },
+      include: {
+        userCreator: true,
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: 100
+    });
+  }
+
+  static async comunidad(title: string = '') {
+    return await prisma.train.findMany({
+      where: {
+        publico: true,
+        ...(title && {
+          title: {
+            contains: title,
           }
         })
       },
@@ -41,28 +61,50 @@ export class TrainService {
     })
   }
 
-  static async update(id: number, train: Train) {
-    const findtrain = await prisma.train.findUnique({ where: { id } })
-    if (!findtrain) throw new HttpException(404, 'Train doesnt exists')
+  static async update(id: number, train: Train, currentUser: { id: number, role: string }) {
+    const findTrain = await prisma.train.findUnique({ where: { id } });
+
+    if (!findTrain) throw new HttpException(404, 'Train does not exist');
+
+    const isOwner = findTrain.idUserCreator === currentUser.id;
+    const isAdmin = currentUser.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      throw new HttpException(403, 'You are not allowed to update this train');
+    }
+
     return await prisma.train.update({
       where: { id },
       data: {
         ...train,
       }
-    })
+    });
   }
 
-static async delete(id: number) {
-  try {
-    // Borra primero los rates asociados
-    await prisma.rate.deleteMany({ where: { idTrain: id } });
-    // Ahora borra el train
-    return await prisma.train.delete({ where: { id } });
-  } catch (error) {
-    console.error(error);
-    throw new HttpException(404, "Train not found");
+
+  static async delete(id: number, currentUser: { id: number, role: string }) {
+    const findTrain = await prisma.train.findUnique({ where: { id } });
+
+    if (!findTrain) throw new HttpException(404, 'Train does not exist');
+
+    const isOwner = findTrain.idUserCreator === currentUser.id;
+    const isAdmin = currentUser.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      throw new HttpException(403, 'You are not allowed to delete this train');
+    }
+
+    try {
+      // Borra primero los rates asociados
+      await prisma.rate.deleteMany({ where: { idTrain: id } });
+
+      // Ahora borra el train
+      return await prisma.train.delete({ where: { id } });
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(500, 'Error deleting train');
+    }
   }
-}
   static async rate(
     idUser: number,
     idTrain: number,

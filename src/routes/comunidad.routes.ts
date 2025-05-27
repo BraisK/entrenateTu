@@ -10,7 +10,7 @@ const router = Router()
 
 
 //GET Listar todas las ofertas localhost:3000/api/offers/?title=react&category=dam
-router.get('/', isAuthenticate, TrainController.getAll)
+router.get('/', isAuthenticate, TrainController.comunidad)
 //localhost:3000/api/offers/xxxx
 router.get('/:id', isAuthenticate, TrainController.getById)
 //POST añadir una oferta nueva localhost:3000/api/offers/  {body}

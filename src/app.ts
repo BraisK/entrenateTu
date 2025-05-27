@@ -2,6 +2,7 @@ import express, {Response, Request} from 'express'
 import authRouter from './routes/auth.routes'
 import userRouter from './routes/user.routes'
 import trainsRouter from './routes/train.routes'
+import comunidadRouter from './routes/comunidad.routes'
 import suggestionsRouter from './routes/suggestion.routes'
 
 import rateLimit from 'express-rate-limit'
@@ -41,6 +42,7 @@ app.use(limiter)
 
 app.use('/api/auth',authRouter)
 app.use('/api/trains',trainsRouter)
+app.use('/api/comunidad',comunidadRouter)
 app.use('/api/users',userRouter)
 app.use('/api/suggestions',suggestionsRouter)
 
