@@ -33,7 +33,7 @@ export class AuthController {
 
 
             res.cookie('token', token, {
-                maxAge: 60 * 60 * 1000 * 3, // 3 horas de caducidad
+                maxAge: 60 * 60 * 1000 * 24, // 24 horas de caducidad
                 httpOnly: true, // no se puede accerder mediante js
                 secure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === "true" : true,// solo se envia si usas https
                 sameSite: sameSiteValue, // Evita ataques CSRF
