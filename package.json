@@ -7,6 +7,7 @@
     "build": "swc src -d dist --source-maps --copy-files",
     "start": "node dist/src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "prisma generate && prisma migrate deploy",
     "prisma:init": "prisma init",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --preview-feature",
@@ -27,6 +28,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.12.0",
+    "prisma": "^6.9.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
@@ -43,7 +45,6 @@
     "express-validator": "^7.2.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0",
-    "prisma": "^6.3.0"
+    "morgan": "^1.10.0"
   }
 }
