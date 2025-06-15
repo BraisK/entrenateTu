@@ -53,6 +53,19 @@ export class TrainService {
 
   static async create(userId: number, train: Train) {
     console.log('creando', userId)
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    })
+    if (!user) throw new HttpException(404, 'User not found');
+    if (user.role === 'user' || user.role === null){
+      const trainsCount = await prisma.train.count({
+        where: { idUserCreator: userId }
+      })
+      if (trainsCount >= 2) {
+        throw new HttpException(403, 'You have reached the limit of trains');
+      }
+    }
     return await prisma.train.create({
       data: {
         ...train,
@@ -120,14 +133,6 @@ export class TrainService {
     if (!train) {
       throw new Error("Train not found.");
     }
-
-    // Actualizar o crear la calificación
-
-    /*
-        SELECT  AVG(value) AS averageValue, COUNT(value) AS totalCount
-    FROM Rating
-    WHERE offerId = <offerId>;
-        */
     await prisma.rate.upsert({
       where: { idUser_idTrain: { idUser, idTrain } },
       update: { value },

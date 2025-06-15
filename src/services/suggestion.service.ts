@@ -17,7 +17,6 @@ export class SuggestionService {
                 ...(title && {
                     title: {
                         contains: title,
-                        //mode: "insensitive" // Búsqueda sin distinción entre mayúsculas y minúsculas
                     }
                 })
             },
