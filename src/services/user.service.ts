@@ -31,4 +31,30 @@ export class UserService {
             take: 100
         });
     }
+    static async updateProfile(
+        userId: number,
+        data: { name?: string; surname?: string; accepNotifications?: boolean }
+    ) {
+        // Solo permite editar si el usuario existe
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) throw new HttpException(404, 'User not found');
+
+        // Actualiza name, surname y accepNotifications si vienen en data
+        return await prisma.user.update({
+            where: { id: userId },
+            data: {
+                ...(data.name && { name: data.name }),
+                ...(data.surname && { surname: data.surname }),
+                ...(typeof data.accepNotifications === "boolean" && { accepNotifications: data.accepNotifications }),
+            },
+            select: {
+                id: true,
+                name: true,
+                surname: true,
+                email: true,
+                role: true,
+                accepNotifications: true,
+            }
+        });
+    }
 }

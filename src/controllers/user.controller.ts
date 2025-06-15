@@ -25,6 +25,17 @@ export class UserController {
             next(error)
         }
     }
+    static async updateProfile(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) throw new HttpException(401, 'No autorizado');
+            const { name, surname, accepNotifications } = req.body;
+            const updatedUser = await UserService.updateProfile(Number(userId), { name, surname, accepNotifications });
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 /* function login(){
